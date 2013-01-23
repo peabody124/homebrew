@@ -27,6 +27,23 @@ class Kicad < Formula
     system "make install" # if this fails, try separate make/make install steps
   end
 
+  def caveats; <<-EOS.undent
+    kicad.app and friends installed to:
+      #{prefix}/bin
+
+    To link the application to a normal Mac OS X location:
+        brew linkapps
+    or:
+        ln -s #{prefix}/bin/bitmap2component.app /Applications
+        ln -s #{prefix}/bin/cvpcb.app /Applications
+        ln -s #{prefix}/bin/eeschema.app /Applications
+        ln -s #{prefix}/bin/gerbview.app /Applications
+        ln -s #{prefix}/bin/kicad.app /Applications
+        ln -s #{prefix}/bin/pcb_calculation.app /Applications
+        ln -s #{prefix}/bin/pcbnew.app /Applications
+    EOS
+  end
+
   def test
     # This test will fail and we won't accept that! It's enough to just replace
     # "false" with the main program this formula installs, but it'd be nice if you
