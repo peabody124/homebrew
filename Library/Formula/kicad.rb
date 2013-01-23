@@ -1,14 +1,26 @@
 require 'formula'
 
 class Kicad < Formula
-  head 'https://github.com/peabody124/kicad.git'
+  # because bzr is extremely slow this github mirror can be used
+  # head 'https://github.com/peabody124/kicad.git'
+
+  # The development testing tree
+  devel "http://bazaar.launchpad.net/~kicad-testing-committers/kicad/testing/", :using => :bzr
+
+  # The stable branch
+  head "http://bazaar.launchpad.net/~kicad-stable-committers/kicad/stable/", :using => :bzr
+
+  # A selected known working version.  No official packages of source code are released by kicad.
+  url "http://bazaar.launchpad.net/~kicad-stable-committers/kicad/stable/", :revision => '3261', :using => :bzr
+
   homepage 'https://launchpad.net/kicad'
-  version '0.1'
+  version 'stable-3261'
   sha1 ''
 
   depends_on 'cmake' => :build
   depends_on :x11 # if your formula requires any X11/XQuartz components
   depends_on 'wxwidgets'
+  depends_on 'kicad-library'
 
   def patches
     [
@@ -20,13 +32,10 @@ class Kicad < Formula
   end
 
   def install
-    # ENV.j1  # if your formula's build system can't parallelize
-
-    #system "cmake", ".", "-DwxWidgets_CONFIG_EXECUTABLE=/usr/local/bin/wx-config -DwxWidgets_wxrc_EXECUTABLE=/usr/local/bin/wxrc -DKICAD_TESTING_VERSION=ON -DCMAKE_CXX_FLAGS=-D__ASSERTMACROS__", *std_cmake_args
     system "cmake", ".", "-DKICAD_STABLE_VERSION=ON -DCMAKE_CXX_FLAGS=-D__ASSERTMACROS__", *std_cmake_args
     system "make install" # if this fails, try separate make/make install steps
 
-    # link the kicad binary to bin
+    # link the kicad binary to bin so it can be launched easily from the command line
     ln_s prefix+'bin/kicad.app/Contents/MacOS/kicad', bin
   end
 
@@ -48,9 +57,7 @@ class Kicad < Formula
   end
 
   def test
-    # This test will fail and we won't accept that! It's enough to just replace
-    # "false" with the main program this formula installs, but it'd be nice if you
-    # were more thorough. Run the test with `brew test kicad`.
-    system "false"
+    # run main kicad UI
+    system "kicad"
   end
 end
