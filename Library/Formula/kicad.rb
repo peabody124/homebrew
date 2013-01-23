@@ -25,6 +25,9 @@ class Kicad < Formula
     #system "cmake", ".", "-DwxWidgets_CONFIG_EXECUTABLE=/usr/local/bin/wx-config -DwxWidgets_wxrc_EXECUTABLE=/usr/local/bin/wxrc -DKICAD_TESTING_VERSION=ON -DCMAKE_CXX_FLAGS=-D__ASSERTMACROS__", *std_cmake_args
     system "cmake", ".", "-DKICAD_STABLE_VERSION=ON -DCMAKE_CXX_FLAGS=-D__ASSERTMACROS__", *std_cmake_args
     system "make install" # if this fails, try separate make/make install steps
+
+    # link the kicad binary to bin
+    ln_s prefix+'bin/kicad.app/Contents/MacOS/kicad', bin
   end
 
   def caveats; <<-EOS.undent
